@@ -43,6 +43,12 @@ void setup() {
   }
 
   Serial.println("OLED display initialized correctly");
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(0, 0);
+  display.print("Hola Josue!");
+  display.display();
 }
 
 void loop() {
