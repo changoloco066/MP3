@@ -8,7 +8,7 @@ PlatformIO from the ground up.
 | Component | Status |
 |---|---|
 | ESP32-S3-DevKitC-1 (N16R8: 16MB flash, 8MB PSRAM) | ✅ Working |
-| 0.96" I2C OLED (SSD1306, 128x64 assumed) | ⚠️ Wired but unreliable — header pins not soldered yet |
+| 0.96" I2C OLED (SSD1306, 128x64 assumed) | ✅ Working — headers soldered, displays text correctly |
 | microSD module (SPI) | 🔲 Not acquired |
 | MAX98357A I2S DAC + amp | 🔲 Not acquired |
 | Small speaker (4-8Ω, 3W) | 🔲 Not acquired |
@@ -23,11 +23,12 @@ PlatformIO from the ground up.
 
 ## Project Status
 
-Currently building the player logic (state machine + fake playlist) using
-the Serial Monitor as the interface, since the OLED headers aren't
-soldered yet and connections are unreliable on the breadboard. Once the
-OLED is soldered and the SD card / DAC arrive, the plan is to wire this
-logic into the real display and real audio output.
+Player state machine works (tested via Serial Monitor) and the OLED
+now displays text correctly on real hardware (headers soldered, I2C
+connection confirmed stable). Next step is wiring the state machine
+output into the OLED itself, so track/state changes show up on screen
+instead of only in Serial. SD card and DAC still need to be acquired
+before real audio playback can happen.
 
 ## Toolchain
 
@@ -49,7 +50,8 @@ logic into the real display and real audio output.
    the above together
 
 Currently working on step 4 in isolation, using a hardcoded fake playlist
-and Serial commands instead of real files/buttons.
+and Serial commands instead of real files/buttons. Now wiring the OLED
+in as a second output alongside Serial, ahead of buttons/SD/DAC.
 
 ## Notes
 

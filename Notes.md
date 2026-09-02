@@ -95,6 +95,17 @@ future-me, coming from a Java/OOP background.
   sellers — may need to test both if text renders wrong/blank despite a
   successful I2C connection.
 
+## Soldering Confirmed the Diagnosis
+
+After soldering the ESP32-S3 headers (instead of just pressing pins into
+the breadboard), the OLED worked immediately with the exact same code
+that failed before. Confirms the earlier I2C scanner diagnosis was
+correct — it really was a physical contact issue the whole time, not
+code. Lesson: for I2C specifically, don't trust "it mostly works" on
+unsoldered header pins — the failure mode can look like a software bug
+(e.g. `display.begin()` returning `true` with nothing connected) when
+it's actually a flaky connection.
+
 ## Wokwi (abandoned for now)
 
 - Tried to simulate the OLED wiring to avoid needing to solder headers
