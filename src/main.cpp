@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
-#include <Adafruit_SSD1306.h>
+#include <Adafruit_SH110X.h>
 
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 64
@@ -9,7 +9,7 @@
 #define I2C_SDA 8
 #define I2C_SCL 9
 
-Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
+Adafruit_SH1106G display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, OLED_RESET);
 
 enum class PlayerState {
   STOPPED,
@@ -28,6 +28,20 @@ String playlist[] = {
 const int totalSongs = 4;
 int currentSong = 0;
 
+void showOnScreen(String line1, String line2) {
+  display.clearDisplay();
+  display.setTextSize(1);
+  display.setTextColor(SH110X_WHITE);
+
+  display.setCursor(0, 0);
+  display.print(line1);
+
+  display.setCursor(0, 16);
+  display.print(line2);
+
+  display.display();
+}
+
 void setup() {
   Serial.begin(115200);
   delay(1000);
@@ -35,7 +49,7 @@ void setup() {
 
   Wire.begin(I2C_SDA, I2C_SCL);
 
-  if (!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+  if (!display.begin(0x3C, true)) {
     Serial.println("Error: OLED display not detected");
     while (true) {
       delay(1000);
@@ -43,6 +57,7 @@ void setup() {
   }
 
   Serial.println("OLED display initialized correctly");
+  showOnScreen("MP3 Player", "Ready");
 }
 
 void loop() {
@@ -53,22 +68,27 @@ void loop() {
     if (command == "play") {
       currentState = PlayerState::PLAYING;
       Serial.println("Playing: " + playlist[currentSong]);
+      showOnScreen("Playing:", playlist[currentSong]);
 
     } else if (command == "pause") {
       currentState = PlayerState::PAUSED;
       Serial.println("Song paused");
+      showOnScreen("Song paused", playlist[currentSong]);
 
     } else if (command == "stop") {
       currentState = PlayerState::STOPPED;
       Serial.println("Stopped");
+      showOnScreen("Stopped", playlist[currentSong]);
 
     } else if (command == "next") {
       currentSong = (currentSong + 1) % totalSongs;
       Serial.println("Next: " + playlist[currentSong]);
+      showOnScreen("Next", playlist[currentSong]);
 
     } else if (command == "prev") {
       currentSong = (currentSong - 1 + totalSongs) % totalSongs;
       Serial.println("Prev: " + playlist[currentSong]);
+      showOnScreen("Prev", playlist[currentSong]);
 
     } else {
       Serial.println("Unknown command: " + command);
